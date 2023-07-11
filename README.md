@@ -296,3 +296,36 @@ value := m["y"]
 len(m)
 ```
 # range
+```
+var num = []int{1,2,3,4,5}
+var m = map[string]int{
+    "x":1,
+    "y":2,
+}
+func main(){
+    for i, v := range num {
+        fmt.Printf("index is %d, value is %D\n", i, v)
+    }
+
+    for i, _ := range num {
+        fmt.Printf("index is %d\n", i)
+    }
+
+    for _, v := range num {
+        fmt.Printf("value is %d\n", v)
+    }
+
+    for k,v := range m {
+        fmt.Printf("key is %s, value is %d\n", k, v)
+    }
+
+    for k, _ := range num {
+        fmt.Printf("key is %d\n", k)
+    }
+
+    for _, v := range num {
+        fmt.Printf("value is %d\n", v)
+    }
+}
+```
+# Method
