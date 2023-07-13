@@ -500,3 +500,179 @@ type Reader interface {
 }
 ```
 # Generics
+```
+// type parameters
+func compare[T comparable](a T, b T){
+    fmt.Println(a == b)
+}
+
+func search[T comparable](s []T, n T) int {
+    for i, v  := range s {
+        if v == n {
+            return i
+        }
+    }
+    return -1
+}
+func main() {
+    s1 := []int{2,4,8,10}
+    fmt.Println(search(s1, 4)) // 1
+    s2 := []string{"red", "pink", "blue"}
+    fmt.Println(search(s2, "white")) // -1
+}
+
+// generic types
+type MyStruct[T any] struct {
+    Val T
+}
+a := MyStruct[int]{1}
+b := MyStruct[bool]{false}
+c := MyStruct[string]{"Hello"}
+```
+# Concurrency // process at the same time or parallel [goroutine]
+```
+go f(x, y, z)
+
+import (
+    "fmt"
+    "time"
+)
+func say(s string) {
+    for i:=0; i<3; i++ {
+        time.Sleep(100 * time.Millisecond)
+        fmt.Println(s)
+    }
+}
+func main(){
+    s := "World"
+    go say(s)
+    say("Hello")
+}
+
+// Channels
+ch := make(chan int)
+ch <- v1 // v1 is int variable 
+
+func sum(s []int, ch chan int){
+    sum := 0
+    for _, v := range s {
+        sum += v
+    }
+    ch <- sum
+}
+func main(){
+    ch := make(chan int)
+    go sum([]int{1,2,3}, ch) // 1+2+3=6
+    go sum([]int{4,5,6}, ch) // 4+5+6=15
+    a,b := <-ch, <-ch
+    fmt.Println(a, b) // 15 6
+}
+
+// inline goroutine
+func todo(ch chan int){
+    ch <- 1
+}
+ch := make(chan int)
+go todo(ch)
+
+ch1 := make(chan int)
+go func(){
+    ch <- 1
+}()
+fmt.Println(<-ch) // 1
+
+// Buffered Channels
+ch := make(chan int, 10) // 10 is buffer argument
+
+// range with close()
+v, ok := <-ch // to check what if the channel is closed?
+
+func compute(s []int, ch chan int){
+    for _, v := range s {
+        ch <- v * 2
+    }
+    close(ch)
+}
+func main(){
+    ch := make(chan int, 3)
+    go compute([]int{1,2,3}, ch)
+    for {
+        v, ok := <- ch
+        if !ok {
+            break
+        }
+        fmt.Println(v)
+    }
+}
+
+func compute(s []int, ch chan int){
+    for _, v := range s {
+        ch <- v * 2
+    }
+    close(ch)
+}
+func main(){
+    ch := make(chan int, 3)
+    go compute([]int{1,2,3}, ch)
+    for v := range ch{
+        fmt.Println(v)
+    }
+}
+
+// select ...case
+func main(){
+    ch := make(chan int)
+    quit := make(chan int)
+    go func(){
+        for i:=0; i<3; i++ {
+            fmt.Println(<-ch)
+        }
+        quit <- 0
+    }()
+    count := 0
+    for {
+        select {
+            case ch <- count:
+                count += 2
+            case <- quit:
+                fmt.Println("quit")
+                return
+        }
+    }
+}
+
+// select ...case ...default
+select {
+    case i:= <-ch:
+        statement
+    default:
+        statement
+}
+
+import (
+    "fmt"
+    "time"
+)
+func main(){
+    tick := time.Tick(100*time.Millisecond)
+    finish := time.After(500*time.Millisecond)
+    count := 0
+    for {
+        select {
+            case <- tick:
+                count += 1
+                fmt.Println("Count: ", count)
+            case <- finish:
+                fmt.Println("Finish")
+                return
+            default:
+                fmt.Println("^_^")
+                time.Sleep(50*time.Millisecond)
+        }
+    }
+}
+
+// len() and cap() with buffered channel
+ch := make(chan int, 10)
+fmt.Printf("length= %d, capacity= %d", len(ch), cap(ch)) // length= 0, capacity= 10
+```
