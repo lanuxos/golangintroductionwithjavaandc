@@ -4,12 +4,20 @@
 
 # Commands
 ```
-go mod init
+go mod init MODULE_NAME // initial go.mod for dependency tracking
 go mod tidy
 go get <URL>
 go mod edit -replace xxx=yyy
+go build file_name.go
 ```
 # Variable types [bool, string, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, uintptr, byte [int8], rune [int32], float32, float64, complex64, complex128, slice, map, channel, function, interface, const, type]
+```
+var NAME TYPE
+var NAME TYPE = VALUE
+var NAME1, NAME2 TYPE = VALUE1, VALUE2
+var NAME1, NAME2 = VALUE1, VALUE2
+NAME := VALUE // only allow in function scope, no allow in package level
+```
 # string
 - fmt.Printf("%")
     - [any kind of value] %v, %#v, %T, %%, %t
