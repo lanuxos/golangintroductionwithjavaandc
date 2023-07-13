@@ -329,3 +329,174 @@ func main(){
 }
 ```
 # Method
+```
+// there are two types of receiver [value and pointer receiver]
+// value receiver
+func (r T) method_name(){} // r - receiver with T type
+
+type MyInt int
+func (m MyInt) Add(value int) int {
+    return int(m) + value
+}
+func main(){
+    num := MyInt(3)
+    fmt.Println(num.Add(5)) // 8
+}
+
+type Rectangle struct {
+    Width, Height int
+}
+func (r Rectangle) Area() int {
+    return r.Width * r.Height
+}
+func main(){
+    rec := Rectangle{3, 4}
+    fmt.Println(rec.Area()) // 12
+}
+
+type Rectangle string {
+    Width, Height int
+}
+func Area(r Rectangle) int {
+    return r.Width * r.Height
+}
+func main(){
+    rec := Rectangle{3, 4}
+    fmt.Println(Area(rec)) // 12
+}
+
+// pointer receiver
+func (p *T) method_name() {}
+
+type Rectangle struct {
+    Width, Height int
+}
+func (r *Rectangle) Area() int {
+    return r.Width * r.Height
+}
+func main(){
+    rec := &Rectangle{3, 4}
+    fmt.Println(rec.Area()) // 12
+}
+```
+# Interfaces
+```
+type Area interface {
+    Compute() float64
+}
+
+type MyInf interface {
+    Todo()
+}
+type MyStruct struct {
+    S string
+}
+func (m MyStruct) Todo() {
+    fmt.Println("Say ", m.S)
+}
+func main(){
+    var m MyInf = MyStruct("Hello")
+    m.Todo() // Say Hello
+}
+
+// inline declare interface
+func main(){
+    var m interface {
+        Todo()
+    }
+    fmt.Printf("%v, %T\n", m, m) // (<nil>, <nil>)
+}
+
+// empty interface, no method interface
+interface{}
+
+// any
+var a any
+a = 5
+fmt.Println(a) // 5
+a = "Hello"
+fmt.Println(a) // Hello
+
+a1 := [4]any{1, 2.2, "OK", true} // same as >>> a1:=[4]interface{}{1, 2.2, "OK", true}
+
+a2 := []any{1, 2.2, "OK", true}
+
+func display(value ...any) { // func display(value ...interface{})
+    for _, v:= range value {
+        fmt.Println("value is ", v)
+    }
+}
+func main(){
+    display(1,2.2, "OK", false)
+}
+
+// type assertion: i:=j.(T) // j is interface type
+var i any = "any_value"
+j := i.(string) // var j string = i.(string)
+
+// check interface value type
+var i any = "any_value"
+j,k := i.(string) // j="any value", k=true
+j,k := i.(int) // j=0, k=false because i hold string
+
+// type switches
+func todo(i any) {
+    switch t := i.(type) {
+        case int:
+            fmt.Println("Number is ", v)
+        case string:
+            fmt.Println("String is ", v)
+        default:
+            fmt.Printf("type is %T \n", v)
+    }
+}
+func main(){
+    todo(5) // Number is 5
+    todo("something") // String is something
+    todo(true) // type is bool
+}
+
+// Stringer
+type Stringer interface {
+    String() string
+}
+type Rectangle struct {
+    Width, Height int
+}
+func (r *Rectangle) String() string {
+    return fmt.Sprintf("Width is %d, Height is %d", r.Width, r.Height)
+}
+func main(){
+    rec := $Rectangle{3,4}
+    fmt.Println(rec) // Width is 3, Height is 4
+    fmt.Println(rec.String()) // Width is 3, Height is 4
+}
+
+// Errors
+type error interface {
+    Error() string
+}
+
+func main(){
+    i, err := strconv.Atoi("5") // convert string to integer
+    if err != nil {
+        fmt.Printf("Could not convert number: %v\n", err) // this statement does not run, because "5" is string, could convert into integer
+        return
+    }
+    fmt.Println("Converted", i "to integer") // Converted 5 to integer
+}
+func main(){
+    i, err := strconv.Atoi("abc")
+    if eer != nil {
+        fmt.Printf("Could not convert number: %v\n", err) // Could not convert number: strconv.Atoi: parsing "abc": invalid syntax
+        return
+    }
+    fmt.Println("Convert ", i, " to integer") // this statement is not run
+}
+
+// reader
+type Reader interface {
+    Read(buf []byte) (n int, err error)
+}
+```
+# Generics
