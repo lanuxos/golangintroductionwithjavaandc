@@ -10,15 +10,103 @@ go get <URL>
 go mod edit -replace xxx=yyy
 go build file_name.go
 ```
+# Keywords [const, func, import, package, type, var, chan, interface, map, struct, break, case, continue, default, else, fallthrough, for, goto, if, range, return, select, switch, defer, go]
+# Identifiers
+- combine with unicode alphabet, unicode number, underscore
+- Capital letter for public variable, lower case for private one
+- 
+# Packages
+```
+// one by one import package
+import "fmt"
+import "math/rand"
+
+// import multiple packages
+import (
+    "fmt"
+    "time"
+)
+func main(){
+    fmt.Println("Now is: ", time.Now())
+}
+
+// change package's name
+import (
+    f "fmt"
+    t "time"
+)
+func mani(){
+    f.Println("Now is: ", t.Now())
+}
+
+// external packages reference
+// before run the package, 
+// must run "go mod tidy" first
+
+// install package manually
+// run command "go get PACKAGE_NAME"
+// run command "go get github.com/google/uuid"
+import (
+    "fmt"
+    "github.com/google/uuid"
+)
+func main(){
+    fmt.Println(uuid.New())
+}
+
+// replace online package with local package
+// through command "go mod edit -replace abc.com/package=./go_package"
+// or just edit "go.mod" directly as
+replace abc.com/package => ./go_package
+```
 # Variable types [bool, string, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, uintptr, byte [int8], rune [int32], float32, float64, complex64, complex128, slice, map, channel, function, interface, const, type]
 ```
 var NAME TYPE
+
+// variables initialize
 var NAME TYPE = VALUE
 var NAME1, NAME2 TYPE = VALUE1, VALUE2
 var NAME1, NAME2 = VALUE1, VALUE2
-NAME := VALUE // only allow in function scope, no allow in package level
+NAME := VALUE // only allow in function scope, not package level
+
+// multiple declare variables
+var (
+    NAME TYPE = VALUE
+    NAME1 TYPE = VALUE1
+    NAME2 TYPE = VALUE2
+)
+
+// Zero values [0, false, "", nil]
+
+// Type conversions
+T(v)
+var i int = 15
+var f float64 = float64(i)
+
+// type interface [short variable declaration]
+a := 1 // means a is integer type
+
+// constants
+const PI = 3.14 // cannot use := to assign value
+
+// variable with memory
+// in function level, declared variable must use, 
+// else comply error, package and statement as well; 
+// except declare in package level or 
+// use const instead for non-use variable
+
+// type
+type MyInt int64
+type MyFloat float64
+type MyString string
+
+// rune
+var a rune = 97
+fmt.Printf("%q\n", a) // 'a'
 ```
 # string
+- len(VARIABLE)
+- combine strings with "+" / plus sign
 - fmt.Printf("%")
     - [any kind of value] %v, %#v, %T, %%, %t
     - [integer value] %b, %c, %d, %o, %O, %q, %x, %X, %U
@@ -26,9 +114,53 @@ NAME := VALUE // only allow in function scope, no allow in package level
     - [string, slice of byte value] %s, %q, %x, %X
     - [slice value] %p
     - [pointer value] %p
+- escape characters
+    - \a for alert/bell
+    - \b for backspace
+    - \\ for backslash (\)
+    - \t for horizontal tab
+    - \n for line feed [new line]
+    - \f for form feed
+    - \r for carriage return
+    - \v for vertical tab
+    - \' for single quote in rune type
+    - \" for double quote in string type
+- raw string literal by using backticks(`)
+```
+msg := `line 1
+line 2
+line 3
+`
+```
+- escape HTML
+```
+const div = `<div class="container"></div>`
+fmt.Println(html.EscapeString(div))
+```
+- escape URL
+```
+const u = `https://google.com`
+fmt.Println(url.PathEscape(u))
+```
 - fmt.Scanf()
+```
+func main(){
+    var v string
+    fmt.Printf("Enter your name here: ")
+    fmt.Scanf("%s", &v)
+    fmt.Printf("Hello, %s", v)
+}
+```
 - fmt.Scan()
-- fmt.Sprintf()
+```
+func main(){
+    var v string
+    fmt.Prinf("Enter your name here: ")
+    fmt.Scan(&v)
+    fmt.Printf("Hello, %s", v)
+}
+```
+- fmt.Sprintf() // same as fmt.Printf but return as string
 - strconv.Itoa(123) / strconv.Atoi("321")
 - strconv.ParseBool("true")
 - strconv.ParseFloat("")
@@ -38,30 +170,91 @@ NAME := VALUE // only allow in function scope, no allow in package level
 - Arithmetic Operators [+ - * / % ++ --]
 - Assignment Operators [= += -= *= /= %=]
     - x=y
-    - x+=y == x=x+y
-    - x-=y == x=x-y
-    - x*=y == x=x*y
-    - x/=y == x=x/y
-    - x%=y == x=x%y
+    - x+=y same as x=x+y
+    - x-=y same as x=x-y
+    - x*=y same as x=x*y
+    - x/=y same as x=x/y
+    - x%=y same as x=x%y
 - Comparison Operators [== != < <= > >=]
 - Logical Operators [&& || !]
+    - false &&  false   =   true
+    - true  &&  true    =   true
+    - false &&  true    =   false
+    - false ||  false   =   false
+    - true  ||  true    =   true
+    - false ||  true    =   true
+    - !                 =   not
 - Bitwise Operators [& | ^ << >>]
+    - &     AND
+    - |     OR
+    - ^     XOR
+    - <<    ZERO FILL LEFT SHIFT
+    - >>    SIGNED RIGHT SHIFT
 - Operator Precedence
+    - Postfix [left to right]
+        () [] <- . ++ --
+    - Unary [left to right]
+        + - ! ~ ++ -- (type)* & sizeof
+    - Multiplicative [left to right]
+        * / %
+    - Additive [left to right]
+        + -
+    - Shift [left to right]
+        << >>
+    - Relational [left to right]
+        < <= > >=
+    - Equality [left to right]
+        == !=
+    - Bitwise AND [left to right]
+        &
+    - Bitwise XOR [left to right]
+        ^
+    - Bitwise OR [left to right]
+        |
+    - Logical AND [left to right]
+        &&
+    - Logical OR [left to right]
+        ||
+    - Assignment [right to left]
+        = += -+ *= /= %= >>= <<= &= ^= |=
+    - Comma [left to right]
+        ,
 # Functions
 ```
 func FUNCTION_NAME(PARAMETER PARAMETER_TYPE) RETURN TYPE {}
-func la(name string) string {
+func la(name string) string { 
+    // function_name is la, 
+    // has name as string parameter and 
+    // return string
     return name
 }
-func noReturn(){} // for no return func, no need to declare return type
+
+// for no return function, 
+// no need to declare return type
+func noReturn(){} 
+
 func returnMultiple(a, b int) (int, string){}
+
+// Naked return functions
 func nakedReturn(a, b int) (a, b int){
-    return
+    return // same as return a, b
+}
+
+// block
+func main(){
+    a := 10
+    {
+        a := 20
+        fmt.Println(a) // 20
+    }
+    fmt.Println(a) // 10
 }
 ```
 - variadic function
 ```
-func vf(str ...string){ // declare one str parameter but could have multiple slices
+func vf(str ...string){ 
+    // declare one str parameter 
+    // but could have multiple slices
     fmt.Println(s[0])
     fmt.Println(s[1])
     fmt.Println(s[2])
@@ -71,10 +264,41 @@ func vf(str ...string){ // declare one str parameter but could have multiple sli
 ```
 func(name string){
     fmt.Println("Hello, ", name)
-} ("La")
+} ("La") // Hello La
 ```
 # Function Values
+```
+func todo(fn func(string) string) {
+    msg := fn("everybody")
+    fmt.Println(msg)
+}
+func main(){
+    say := func(msg string) string {
+        return "Hello" + msg
+    }
+    todo(say) // Hello everybody
+}
+```
 # Function Closures
+// any anonymous function could interact with 
+// surround variables, called "closure"
+```
+func add() func(int) int {
+    sum := 0
+    return func(a int) int {
+        // could use "sum" variable in anonymous function, 
+        // even it is not in this function scope
+        sum += a 
+        return sum
+    }
+}
+func main(){
+    one, two := add(), add()
+    for i:=0; i<3; i++ {
+        fmt.Println(one(1), two(2)) // 1 2; 2 4; 4 6
+    }
+}
+```
 # Flow Control Statements
 - if, if...else, if...else if...else
 ```
@@ -111,10 +335,17 @@ for i:=0; i<5; i++ {
     fmt.Println("number ", i)
 }
 
+// init_statement and post_statement could leave out as:
 for ; condition_expression; {
     statement
 }
+
+// use "for" instead of "while"
 for condition_expression {
+    // when condition_expression is true
+    // below statement continue running
+    // until condition_expression is false
+    // below statement stop
     statement
 }
 j:=0
@@ -130,6 +361,20 @@ for(;;){}
 
 do {} while (1);
 ```
+- break
+```
+func main(){
+    count := 0
+    for {
+        if count < 3 {
+            fmt.Println(count)
+            count ++
+        } else {
+            break
+        }
+    }
+}
+```
 - continue
 ```
 for count:=0; count<3; count++ {
@@ -142,12 +387,24 @@ for count:=0; count<3; count++ {
 ```
 switch short_statement; expression {
     case expression1:
-        statement1;
+        // run statement1 when 
+        // above expression == expression1 and
+        // exit the switch block
+        statement1; 
     case expression2:
+        // run statement2 when 
+        // above expression == expression2 and
+        // exit the switch block
         statement2;
     case expression3:
+        // run statement3 when 
+        // above expression == expression3 and
+        // exit the switch block
         statement3;
     default:
+        // run default_statement when 
+        // above expression != above expressions and
+        // exit the switch block
         default_statement;
 }
 
@@ -170,15 +427,20 @@ func main(){
     }
 }
 
+// fallthrough
 switch short_statement; expression {
     case expression1:
         statement1
-        fallthrough // continue to case expression2, if no fallthrough after met the condition, this flow will break
+        fallthrough 
+        // continue to case expression2, 
+        // if no fallthrough after met the condition, 
+        // this flow will break and exit the block
     case expression2:
         statement2
         fallthrough
 }
 
+// switch without condition
 switch {
     case expression1:
         statement1
@@ -188,7 +450,7 @@ switch {
         default_statement
 }
 ```
-- defer [postpone, last in first out]
+- defer [stacked postpone, last in first out]
 ```
 defer fmt.Println("Golang") // last print
 defer fmt.Println("world") // secondly
