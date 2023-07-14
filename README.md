@@ -465,14 +465,22 @@ FINISH:
     fmt.Println("B") // print out
 ```
 # Pointer [*T]
+// the special variable which hold or 
+// point to memory address
 ```
-var p *int // p is nil, point to integer in memory
+var p *int // p is nil, point to integer at memory address
 
 a := 1
-b := &a // b point to a in memory
-c := &a // c point to a in memory
+b := &a // b point to a at memory address
+c := &a // c point to a at memory address
+// but could not directly point to plain data as d := &123
+// except array, slice or map as pa := &[2]int{1,2}
+*c := 5 // a will change to 5 too
+d := b // d [standard variable, not pointer] only copy value of b
+var p *int
+p := b // p copy pointer/memory address from b
 ```
-# Structs
+# Struct
 ```
 type MyStruct struct {
     field1 type
@@ -488,17 +496,32 @@ func main(){
     a1:=Axis{1,2}
     fmt.Println(a1) // {1 2}
     fmt.Println(a1.X, a1.Y) // {1 2}
-    a1.X = 4
+    a1.X = 4 // struct literals
 }
 
 var a struct {
     X, Y int
 }
+a1 = a{1,2}
+a2 = a{X: 1, Y: 2}
+a3 = a{X: 1}
+a4 = a{Y: 2}
+a5 = a{}
+a6 = &a{1l,22}
+
+// anonymous struct
+s := struct {
+    Name string
+    Age int
+} {
+    "La",
+    30, // when declaring no need comma [,] but assigning value must have
+}
 ```
 # Arrays/Slice
 - array is a list of certain value
 ```
-[n]T
+[n]T // nil zero value
 
 var a [5]int
 
@@ -507,27 +530,33 @@ hw[0]="hello"
 hw[1]="world"
 fmt.Println(hw) // [hello world]
 
-var b := [...]int{1,2,3} // same as b:=[3]int{1,2,3}
+var b := [...]int{1,2,3} 
+// same as b:=[3]int{1,2,3}
+// it count the length automatically
 ```
 - slice is a list with dynamic members
 ```
 []T
 
+// len() and cap()
 s := []int{1,2,3}
-
 len(s) // 3
 cap(s) // 3
 
+// slicing
 s[0:2]
-s[:]
+s[:] // slice from first index [0] to last index
 
+// make()
 s1 := make([]int, 5) // len(s1) = cap(s1) = 5
 
+// slice in slice
 double_slice := [][]int {
     []int{0,1},
     []int{1,0},
 }
 
+// append()
 s2 = append(s1, 5)
 ```
 # Map [key_type] value_type
