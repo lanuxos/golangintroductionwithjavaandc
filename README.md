@@ -329,6 +329,7 @@ func main(){
 }
 ```
 # Method
+# Interfaces
 # Generics
 ```
 // type parameters
