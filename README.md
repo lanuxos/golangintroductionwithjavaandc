@@ -10,7 +10,32 @@ go get <URL>
 go mod edit -replace xxx=yyy
 go build file_name.go
 ```
-# Keywords [const, func, import, package, type, var, chan, interface, map, struct, break, case, continue, default, else, fallthrough, for, goto, if, range, return, select, switch, defer, go]
+# Keywords 
+- const
+- func
+- import
+- package
+- type
+- var
+- chan
+- interface
+- map
+- struct
+- break
+- case
+- continue
+- default
+- else
+- fallthrough
+- for
+- goto
+- if
+- range
+- return
+- select
+- switch
+- defer
+- go]
 # Identifiers
 - combine with unicode alphabet, unicode number, underscore
 - Capital letter for public variable, lower case for private one
@@ -59,7 +84,33 @@ func main(){
 // or just edit "go.mod" directly as
 replace abc.com/package => ./go_package
 ```
-# Variable types [bool, string, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, uintptr, byte [int8], rune [int32], float32, float64, complex64, complex128, slice, map, channel, function, interface, const, type]
+# Variable types 
+- bool
+- string
+- int
+- int8
+- int16
+- int32
+- int64
+- uint
+- uint8
+- uint16
+- uint32
+- uint64
+- uintptr
+- byte [int8]
+- rune [int32]
+- float32
+- float64
+- complex64
+- complex128
+- slice
+- map
+- channel
+- function
+- interface
+- const
+- type]
 ```
 var NAME TYPE
 
@@ -588,7 +639,8 @@ m1["x"]=100
 
 delete(m2, "foo")
 
-value, key := m["x"] // if m map have "x" key, value equal "value" and key equal "true"
+value, key := m["x"] 
+// if m map have "x" key, value equal "value" and key equal "true"
 
 value := m["y"]
 
@@ -716,11 +768,13 @@ fmt.Println(a) // 5
 a = "Hello"
 fmt.Println(a) // Hello
 
-a1 := [4]any{1, 2.2, "OK", true} // same as >>> a1:=[4]interface{}{1, 2.2, "OK", true}
+a1 := [4]any{1, 2.2, "OK", true} 
+// same as >>> a1:=[4]interface{}{1, 2.2, "OK", true}
 
 a2 := []any{1, 2.2, "OK", true}
 
-func display(value ...any) { // func display(value ...interface{})
+// func display(value ...interface{})
+func display(value ...any) { 
     for _, v:= range value {
         fmt.Println("value is ", v)
     }
@@ -973,5 +1027,6 @@ func main(){
 
 // len() and cap() with buffered channel
 ch := make(chan int, 10)
-fmt.Printf("length= %d, capacity= %d", len(ch), cap(ch)) // length= 0, capacity= 10
+fmt.Printf("length= %d, capacity= %d", len(ch), cap(ch)) 
+// length= 0, capacity= 10
 ```
